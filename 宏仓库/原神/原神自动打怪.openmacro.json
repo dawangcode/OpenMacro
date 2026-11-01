@@ -1,0 +1,21 @@
+{
+  "type": "openmacro-macro",
+  "macro": {
+    "name": "原神自动打怪",
+    "playMode": "toggleLoop",
+    "repeatInterval": 100,
+    "playCount": 1,
+    "speed": 1,
+    "steps": [
+      {"kind":"keyboard","key":"Q","action":"down"},
+      {"kind":"keyboard","key":"Q","action":"up"},
+      {"delay":100,"kind":"delay"},
+      {"kind":"keyboard","key":"E","action":"down"},
+      {"kind":"keyboard","key":"E","action":"up"},
+      {"delay":100,"kind":"delay"},
+      {"kind":"mouse","action":"down","key":"left"},
+      {"kind":"mouse","action":"up","key":"left"},
+      {"kind":"delay","delay":100,"action":"click"}
+    ]
+  }
+}

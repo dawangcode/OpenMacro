@@ -1,0 +1,32 @@
+{
+  "type": "openmacro-macro",
+  "macro": {
+    "name": "双头玛",
+    "playMode": "once",
+    "repeatInterval": 100,
+    "playCount": 1,
+    "speed": 1,
+    "steps": [
+      {"kind":"mouse","action":"down","key":"left"},
+      {"delay":330,"kind":"delay"},
+      {"kind":"mouse","action":"up","key":"left"},
+      {"delay":50,"kind":"delay"},
+      {"kind":"mouse","action":"down","key":"left"},
+      {"delay":180,"kind":"delay"},
+      {"kind":"mouse","action":"down","key":"right"},
+      {"delay":50,"kind":"delay"},
+      {"kind":"mouse","action":"up","key":"right"},
+      {"delay":50,"kind":"delay"},
+      {"kind":"mouse","action":"up","key":"left"},
+      {"delay":50,"kind":"delay"},
+      {"kind":"mouse","action":"down","key":"left"},
+      {"delay":180,"kind":"delay"},
+      {"kind":"mouse","action":"down","key":"right"},
+      {"delay":50,"kind":"delay"},
+      {"kind":"mouse","action":"up","key":"right"},
+      {"delay":900,"kind":"delay"},
+      {"kind":"mouse","action":"up","key":"left"},
+      {"delay":100,"kind":"delay"}
+    ]
+  }
+}
