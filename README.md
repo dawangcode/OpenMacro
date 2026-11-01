@@ -2,6 +2,8 @@
 
 ![alt text](image.png)
 宏支持导入导出
+![alt text](image-5.png)
+支持录制，支持导出。手工编辑简单。
 ![alt text](image-1.png)
 支持导入罗技 G HUB 宏
 ![alt text](image-2.png)
