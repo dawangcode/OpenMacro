@@ -1,0 +1,10 @@
+# pnpm >=11：构建脚本授权用 allowBuilds 映射（旧字段 onlyBuiltDependencies 已失效）。
+# strictDepBuilds 默认开启，未列出的包安装即报 ERR_PNPM_IGNORED_BUILDS 退出。
+allowBuilds:
+  # 输入后端：本地 fork 源码（file: 依赖），安装期跑 node-gyp-build 编译补丁源码
+  uiohook-napi@file:../uiohook-napi-patch: true
+  core-js: true
+  core-js-pure: true
+  electron-winstaller: true
+  es5-ext: true
+  esbuild: true

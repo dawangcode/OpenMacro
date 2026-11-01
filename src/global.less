@@ -1,0 +1,242 @@
+// 全局样式（Umi 内置 less 支持，无需额外依赖）
+@color-primary: #1677ff;
+
+// 清除浏览器默认 margin，并让根节点撑满视口：
+// 否则 body 默认 8px margin + Layout 100vh 会造成 100vh+16px 的溢出，
+// 先出竖向滚动条，滚动条占宽后再引出横向滚动条（双轴滚动条的根因）。
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+// 字体抗锯齿（与 soft/lup 全局样式一致）
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 表格与描述列表用等宽数字：延迟 / 时间 / 次数列不再左右参差
+.ant-table-wrapper,
+.ant-descriptions {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+// 中文标题微字距，避免字挤在一起发闷
+.ant-typography,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  letter-spacing: 0.2px;
+}
+
+// 卡片留白统一，页面区块更透气
+.ant-card {
+  .ant-card-body {
+    padding: 20px 24px;
+  }
+}
+
+// ProLayout 内容与卡片之间留白
+.ant-pro-page-container {
+  padding-inline: 24px;
+  padding-block: 16px;
+}
+
+// 按键实时检测：最近 1.5 秒内的「按下」事件行高亮（PRD 4.2）
+.detect-row-active > td {
+  background-color: #e6f4ff !important;
+}
+
+// 操作列单元格内边距收窄为 8px（普通单元格 16px）：
+// 操作列内容是紧凑文字链接，按 16px 内边距算出的列宽会残留大片空白（hl-05 操作列宽度规范）
+.openmacro-op-cell.openmacro-op-cell {
+  padding-inline: 8px;
+}
+
+// 时间轴拖拽排序（宏编辑页）：仅序号列手柄可拖，拖动中源行淡出、悬停行高亮
+.openmacro-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: grab;
+  user-select: none;
+}
+
+.openmacro-drag-handle:active {
+  cursor: grabbing;
+}
+
+.openmacro-drag-handle-disabled {
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.timeline-row-dragging > td {
+  opacity: 0.45;
+}
+
+.timeline-row-drag-over > td {
+  background-color: #e6f4ff !important;
+}
+
+// ---- 侧栏（ProLayout SiderMenu）视觉微调 ----
+// 目标：品牌区（渐变 logo + 分隔线）/ 导航区（圆角胶囊 + 淡蓝选中底）层次分明，
+// 不做大面积色块、不加多余动效，保持 Ant Design Pro 的克制风格。
+.ant-pro-sider {
+  // 白色侧栏与浅灰内容区之间给一条极淡分隔线，边界更清楚
+  border-inline-end: 1px solid #eef1f6;
+
+  // 收起/展开不做宽度过渡：antd 的 0.2s 宽度动画会让侧栏在中间每一次重排，
+  // 菜单项、图标、边框都在动画帧里被重新取整（非整数 DPI 下尤其明显），
+  // 观感就是「抖 / 左右错位」。瞬切只有一帧，状态永远稳定
+  transition: none !important;
+
+  // 顶部品牌区：与菜单之间用细分隔线分区
+  // 注意：.ant-layout-sider-children 自带 padding-inline: 8px（pro-layout 的
+  // paddingInlineLayoutMenu 令牌），所以这里填 9px 是「相对它」的量：8 + 9 = 17。
+  // logo 固定 30px 落在 17..47，收起时 17 + 30 + 17 = 64 正好居中
+  // （实测两态 logo 区都是 63px 高、tile 都在 x=17，完全不随折叠位移）。
+  // 仍写死高度与方向：pro-layout 收起态会改成 padding: 12 + column-reverse，
+  // 万一它某版改动，菜单起点就会跟着上下跳，锁死可避免
+  .ant-pro-sider-logo {
+    border-block-end: 1px solid #f4f6fa;
+    padding-inline: 9px;
+    padding-block: 16px;
+    height: 63px;
+    box-sizing: border-box;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: flex-start;
+    transition: none;
+  }
+
+  // 收起态 pro-layout 会把 logo 区 padding 从 16px 改成 12px（图标瞬间上跳 4px），统一回 16px
+  .ant-pro-sider-logo-collapsed {
+    padding-block: 16px;
+  }
+
+  // 菜单上下留白，首项不贴 logo 区。
+  // 必须落在 .ant-menu-root 上：收起态 antd 把根菜单切成了 vertical，只写 inline 的话
+  // 收起后 padding-block 归 0，整排菜单上移 8px（实测首个菜单项 74.9 → 66.9）
+  .ant-menu-root {
+    padding-block: 8px 12px;
+  }
+
+  .ant-menu-item {
+    position: relative;
+
+    // ---- 固定「图标列」：展开 / 收起两态图标 x 完全相同，折叠时图标不移动 ----
+    // 收起态 antd 把 40px 菜单项居中，图标落在 x=23（容器左 8 + 居中留白 3.5 + 内边距 11.5）。
+    // 展开态 antd 默认 padding-inline-start: 16 + 菜单项左右各 10 的外边距，图标被推到 x=34，
+    // 折叠瞬间整列图标向左跳 11px —— 就是用户看到的「往左偏移 / 抖」。
+    // 这里把展开态改成与收起态同一套几何，图标恒定在 x=23（中线 31.5，与 logo 中线 32 共线）：
+    //   容器左 8 + margin 3.5 + padding 11.5 = 23
+    // 宽度同步扣掉左右外边距（3.5 + 10），胶囊左右留白才对称
+    margin-inline: 3.5px 10px;
+    width: calc(100% - 13.5px);
+
+    // 关掉 antd 默认的右侧竖向选中边框（选中态改用胶囊底 + 字色区分，不再叠加多余装饰）
+    &::after {
+      display: none;
+    }
+  }
+
+  // 展开态（未折叠）的图标内边距与收起态对齐：antd 默认 16px 会把图标推到 x=34。
+  // 用 :not(.ant-menu-inline-collapsed) 限定，收起态仍走下面的 padding-inline: 0 + 居中
+  .ant-menu-root:not(.ant-menu-inline-collapsed) .ant-menu-item {
+    // pro-layout 把 padding-left: 16px 写在行内 style 上，普通声明压不住，必须 !important
+    padding-inline-start: 11.5px !important;
+  }
+
+  // 选中项仅用字重微调强调（底色由 Menu token 的 itemSelectedBg 提供）
+  .ant-menu-item-selected {
+    font-weight: 600;
+  }
+
+  // 图标默认比文字淡一档；选中 / 悬停时跟随文字色，层级更清楚
+  .ant-menu-item .ant-menu-item-icon {
+    color: rgba(0, 0, 0, 0.55);
+  }
+
+  .ant-menu-item:hover .ant-menu-item-icon,
+  .ant-menu-item-selected .ant-menu-item-icon {
+    color: inherit;
+  }
+
+  // 折叠态：菜单项固定 40×40，用 auto 在菜单容器里精确居中（容器 8..55 = 47 宽 → 左右各 3.5，
+  // 与展开态的 margin-inline-start: 3.5 对齐，所以折叠时胶囊左边缘和图标都不动）。
+  // 前提是上面已把侧栏宽度过渡关掉：没有动画帧，就不会出现「在还宽着的侧栏里
+  // 先居中到 x=104、再被宽度动画拖回来」的抖动，auto 反而是最稳的居中方式
+  // （不依赖 4px / 3.5px 这类手算值，任意 DPI、任意 collapsedWidth 都居中对齐）。
+  .ant-menu-inline-collapsed .ant-menu-item {
+    width: 40px;
+    height: 40px;
+    margin-inline: auto;
+    padding-inline: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // 图标按 17×17 锁死：pro-layout 的 .ant-pro-base-menu-vertical-item-title-collapsed
+    // 会把图标容器钳成 16×16（height/width:16px + line-height:16px !important），
+    // 17px 字形被压扁 1px（实测 w=17 h=16），四周留白也不对称。
+    // 它带 !important，所以这里也要 !important，选择器同时给上兼容两套类名
+    .ant-menu-item-icon,
+    .ant-pro-base-menu-vertical-item-icon,
+    .ant-pro-base-menu-item-icon {
+      width: 17px !important;
+      height: 17px !important;
+      font-size: 17px;
+      line-height: 1 !important;
+      margin-inline-end: 0;
+    }
+
+    .ant-menu-item-icon .anticon,
+    .ant-pro-base-menu-vertical-item-icon .anticon {
+      width: 17px;
+      height: 17px !important;
+      font-size: 17px;
+      line-height: 1 !important;
+    }
+  }
+
+  // 折叠/展开只让侧栏宽度动：菜单项的 padding / 图标位置不做过渡，
+  // 否则宽度动画的每一帧都在重算菜单项位置，观感就是"来回抖"
+  .ant-menu-item,
+  .ant-menu-item .ant-menu-item-icon,
+  .ant-menu-submenu-title {
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+  }
+}
+
+// ---- 支持作者卡：平台入口 ----
+// 整行可点，悬停时描边 / 阴影提亮、平台名转主色；不做位移，避免鼠标扫过时行内容跳动
+.openmacro-sponsor-channel {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.openmacro-sponsor-name {
+  color: rgba(0, 0, 0, 0.85);
+  transition: color 0.2s ease;
+}
+
+.openmacro-sponsor-arrow {
+  color: rgba(0, 0, 0, 0.3);
+  transition: color 0.2s ease;
+}
+
+.openmacro-sponsor-channel:hover {
+  border-color: #bcd8ff;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.08);
+}
+
+.openmacro-sponsor-channel:hover .openmacro-sponsor-name,
+.openmacro-sponsor-channel:hover .openmacro-sponsor-arrow {
+  color: @color-primary;
+}

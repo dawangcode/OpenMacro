@@ -1,0 +1,12 @@
+node_modules/
+node_modules/.cache/
+dist/
+out/
+src/.umi/
+src/.umi-production/
+.mfsu-dev/
+*.log
+.DS_Store
+.umi-dev-port
+generated-images/
+/release

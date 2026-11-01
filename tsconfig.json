@@ -1,0 +1,23 @@
+{
+  // 工程主 tsconfig（renderer / Umi 侧）：@/* -> src/*
+  // main / preload 由 tsconfig.node.json 单独管（CommonJS 产物），此处 exclude 避免两套 module 诊断打架
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    // 例外：桌面端 renderer 必须用 node 解析——umi 4 在 Bundler 解析下报 Cannot find module 'umi'
+    // （pnpm 严格模式下 umi 仅是 @umijs/max 的传递依赖，无顶层链接）。云端项目用 Bundler。
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src", "typings"],
+  "exclude": ["src/main", "src/preload"]
+}

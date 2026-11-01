@@ -1,0 +1,58 @@
+# electron-builder 打包配置（工程根目录 electron-builder.yml）
+# files 必须同时含 Umi renderer 产物（dist/）与 electron-vite 壳产物（out/）
+appId: com.openmacro.app
+productName: OpenMacro
+copyright: Copyright © 2026
+directories:
+  buildResources: resources
+  # 输出目录必须避开 dist/：dist/ 是 Umi renderer 产物目录，
+  # 若输出也落 dist/，files: dist/**/* 会把上次的 win-unpacked 递归封进 asar。
+  # 2026-10-22：build/ 曾被一个关不掉的句柄锁住（EBUSY + 目录改名被拒），
+  # 换到 release/ 重开；旧 build/ 重启后可手动删。
+  output: release
+files:
+  - dist/**/*
+  - out/**/*
+  # 不整体排除 node_modules：uiohook-napi / @nut-tree/nut-js 是主进程运行时依赖
+  # （out/main/index.js 中为外部 require），其传递依赖必须整棵随包分发；
+  # renderer 依赖已全部移入 devDependencies，electron-builder 只收 dependencies，
+  # 不会把 antd/umi 等数百 MB 打进来。SQLite 走 Node 内置 node:sqlite，无额外原生模块。
+electronDownload:
+  # 本机直连 GitHub 下载 electron 二进制频繁超时（27% 处卡死 10 分钟），统一走 npmmirror。
+  # 注意这个 mirror 只镜像 electron 二进制；nsis / 7zip 等 builder 自身资源走的是
+  # electron-builder-binaries 仓库（本机已缓存），两者不要混。
+  mirror: https://npmmirror.com/mirrors/electron/
+asar: true
+# 托盘图标需要运行时读取（app.isPackaged 时走 process.resourcesPath），必须随包带出 asar
+extraResources:
+  - from: resources/icon.png
+    to: icon.png
+  - from: resources/icon.ico
+    to: icon.ico
+# 用到原生模块时必须解包，否则 asar 内 require .node 会失败：
+# uiohook-napi / @nut-tree/nut-js 的 .node 产物在此列
+asarUnpack:
+  - '**/*.node'
+
+win:
+  icon: resources/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+
+mac:
+  icon: resources/icon.icns
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+
+linux:
+  icon: resources/icon.png
+  target:
+    - target: AppImage
+      arch: [x64]

@@ -1,0 +1,46 @@
+{
+  "name": "openmacro",
+  "private": true,
+  "version": "0.1.0",
+  "productName": "OpenMacro",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "max dev",
+    "dev:app": "concurrently -k -n umi,electron -c blue,green \"node scripts/dev-umi.js\" \"node scripts/dev-electron.js\"",
+    "start": "node scripts/start-client.js",
+    "client": "node scripts/launch-client.js",
+    "build": "max build && electron-vite build",
+    "build:web": "max build",
+    "build:shell": "electron-vite build",
+    "preview": "electron-vite preview",
+    "package": "pnpm run build && electron-builder --config electron-builder.yml",
+    "rebuild:uiohook": "node scripts/rebuild-uiohook.js",
+    "gen:icons": "node scripts/gen-icons.js",
+    "postinstall": "node scripts/rebuild-uiohook.js"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0"
+  },
+  "dependencies": {
+    "@nut-tree/nut-js": "^4.2.0",
+    "uiohook-napi": "file:../uiohook-napi-patch"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^6.3.4",
+    "@ant-design/pro-components": "3.1.14-7",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@umijs/max": "^4.7.26",
+    "antd": "^6.6.7",
+    "axios": "^1.20.0",
+    "concurrently": "^9.2.5",
+    "electron": "^43.8.3",
+    "electron-builder": "^26.18.0",
+    "electron-vite": "^3.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.5"
+  }
+}

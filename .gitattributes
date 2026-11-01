@@ -1,0 +1,6 @@
+# Windows 启动脚本必须 CRLF。git 检出若把 *.cmd/*.bat 转成 LF，
+# cmd.exe 会把整个文件当成一行执行 → 双击 start.cmd 无反应且零报错。
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+* text=auto
